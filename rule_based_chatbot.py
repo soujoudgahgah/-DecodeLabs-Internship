@@ -1,21 +1,102 @@
+
+import random
+from datetime import datetime
 from typing import Optional
 
+
 responses = {
-    "hello": "Hi! How can I help you today?",
-    "hi": "Hey! What's up?",
-    "hey": "Hello! Good to see you.",
-    "how are you": "I'm just a chatbot, but I'm doing great!",
-    "what is your name": "I'm RuleBot, a rule-based assistant built for DecodeLabs.",
-    "who are you": "I'm RuleBot — a logic-driven chatbot, not a learning AI (yet!).",
-    "what can you do": "I can chat using predefined rules. Type 'help' to see some topics.",
-    "thanks": "You're welcome!",
-    "thank you": "Anytime!",
-    "help": "Try asking me: hello, how are you, what is your name, what can you do, or just say bye to leave.",
-    "weather": "I can't check live weather yet — that's outside my rule-based logic for now!",
+    "hello": [
+        "Hi there! Ready to talk AI today?",
+        "Hey! What's on your mind?",
+        "Hello! How can RuleBot assist you?",
+    ],
+    "hi": [
+        "Hey! What's up?",
+        "Hi! Great to see you.",
+        "Hello! Ask me anything.",
+    ],
+    "hey": [
+        "Hey! What can I do for you?",
+        "Hello! Good to see you.",
+        "Hey there! What's going on?",
+    ],
+    "how are you": [
+        "I'm just a set of rules, but I'm running perfectly!",
+        "All my if-else statements are working great, thanks for asking!",
+        "No bugs today — so I'm doing amazing!",
+    ],
+    "what is your name": [
+        "I'm RuleBot — built by Soujoud Gahgah for DecodeLabs Project 1.",
+        "The name's RuleBot. Logic is my superpower.",
+        "I go by RuleBot. Nice to meet you!",
+    ],
+    "who are you": [
+        "I'm RuleBot — a logic-driven chatbot, not a learning AI (yet!).",
+        "A rule-based AI built to prove that intelligence starts with logic.",
+        "I'm RuleBot, your deterministic digital assistant.",
+    ],
+    "what can you do": [
+        "I can chat, answer questions, and tell you jokes — all using pure logic! Type 'help' to see topics.",
+        "I respond to keywords using a dictionary. Simple but powerful! Try 'help'.",
+    ],
+    "thanks": [
+        "You're welcome!",
+        "Anytime!",
+        "Happy to help!",
+    ],
+    "thank you": [
+        "Anytime!",
+        "No problem at all!",
+        "Always here for you!",
+    ],
+    "help": [
+        "Try asking: hello, how are you, what is your name, tell me a joke, what is ai, or say bye to leave.",
+    ],
+    "joke": [
+        "Why do programmers prefer dark mode? Because light attracts bugs!",
+        "Why did the AI fail the test? It had too many deep learning issues.",
+        "A SQL query walks into a bar, walks up to two tables and asks: 'Can I join you?'",
+    ],
+    "what is ai": [
+        "AI is the simulation of human intelligence by machines — and you're learning to build it!",
+        "Artificial Intelligence: teaching machines to think. You're on the right track!",
+    ],
+    "machine learning": [
+        "Machine learning is what comes AFTER rule-based AI — you're building the foundation right now!",
+        "ML lets machines learn from data. But first, you master the rules. Like this project!",
+    ],
+    "python": [
+        "Python is the #1 language for AI. Great choice being here!",
+        "Python powers most of the AI world. You're learning the right tool.",
+    ],
+    "weather": [
+        "I can't check live weather — that's outside my rule-based logic for now!",
+        "Weather APIs are on my future feature list. For now, check your phone!",
+    ],
+    "will it rain": [
+        "I can't predict rain yet — weather APIs are on my future feature list!",
+    ],
+    "decodelabs": [
+        "DecodeLabs is where I was born! Great training program.",
+        "DecodeLabs — building the next generation of developers!",
+    ],
 }
 
 
 exit_commands = {"exit", "quit", "bye", "goodbye", "see you"}
+
+
+def get_time_greeting() -> str:
+  
+    hour = datetime.now().hour
+    if 5 <= hour < 12:
+        return "Good morning! ☀️"
+    elif 12 <= hour < 17:
+        return "Good afternoon! 🌤️"
+    elif 17 <= hour < 21:
+        return "Good evening! 🌙"
+    else:
+        return "Burning the midnight oil? 🌙"
 
 
 def sanitize(raw_input: str) -> str:
@@ -23,16 +104,16 @@ def sanitize(raw_input: str) -> str:
 
 
 def match_intent(clean_input: str) -> Optional[str]:
-    for keyword, reply in responses.items():
+    for keyword, replies in responses.items():
         if keyword in clean_input:
-            return reply
+            return random.choice(replies)  # Pick a random reply each time
     return None
 
 
 def get_bot_reply(raw_input: str) -> str:
     clean_input = sanitize(raw_input)
     reply = match_intent(clean_input)
-    return reply if reply is not None else "I do not understand. Type 'help' to see what I can talk about."
+    return reply if reply is not None else "I don't understand that yet. Type 'help' to see what I can do!"
 
 
 def is_exit_command(clean_input: str) -> bool:
@@ -40,18 +121,22 @@ def is_exit_command(clean_input: str) -> bool:
 
 
 def main():
-    print("Bot: Hello! I'm RuleBot. Type 'help' for topics, or 'bye' anytime to leave.")
+    time_greeting = get_time_greeting()
+    print(f"Bot: {time_greeting} I'm RuleBot. Type 'help' for topics, or 'bye' to leave.")
 
-    while True:  
+    message_count = 0  
+
+    while True:
         raw_input_text = input("You: ")
         clean_input = sanitize(raw_input_text)
 
         if is_exit_command(clean_input):
-            print("Bot: Goodbye! Have a great day.")
-            break  
+            print(f"Bot: Goodbye! We exchanged {message_count} messages today. See you next time! 👋")
+            break
 
         reply = get_bot_reply(raw_input_text)
         print(f"Bot: {reply}")
+        message_count += 1  
 
 
 if __name__ == "__main__":
